@@ -1,4 +1,5 @@
 import sys
+from GetImage import GetImage
 
 """
     Format is:
@@ -28,9 +29,10 @@ def main():
         script, apikeysFile = sys.argv
 
         keys = parseKeys(apikeysFile)
-        pass
+        bing = GetImage(keys["microsoftapi"])
+        url = bing.getImage(["code", "programming"])
     except ValueError as err:
-        print("ERROR:\t Run HMDA as the follows:\t python3 HMDA.py <loanDataFile> <institutionDataFile>")
+        print("ERROR:\t Run LiveSlides as the follows:\t python LiveSlides.py <apikeys file> ")
 
 if __name__ == "__main__":
     main()
