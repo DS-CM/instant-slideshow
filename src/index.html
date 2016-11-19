@@ -5,8 +5,11 @@
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
 </head>
 <body>
+    <img id="slide">
 
 <script type="text/javascript">
+    keys = $.getJSON("./apikeys.json")
+    a = []
     $(function() {
         var params = {
             // Request parameters
@@ -21,13 +24,15 @@
             url: "https://api.cognitive.microsoft.com/bing/v5.0/images/search?" + $.param(params),
             beforeSend: function(xhrObj){
                 // Request headers
-                xhrObj.setRequestHeader("Ocp-Apim-Subscription-Key","43d210d84335499da51d93aa1b0e35db");
+                xhrObj.setRequestHeader("Ocp-Apim-Subscription-Key", keys.microsoft-api);
             },
             type: "GET",
             // Request body
             data: "{body}",
         })
         .done(function(data) {
+            a = data;
+            $('#slide').attr("src", data['value'][0]['contentUrl'])
             alert("success");
         })
         .fail(function() {
