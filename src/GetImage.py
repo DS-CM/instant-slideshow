@@ -1,4 +1,6 @@
-import http.client, urllib.request, urllib.parse, urllib.error, base64
+import http.client, urllib.request, urllib.parse, urllib.error, base64, json
+from pprint import pprint
+
 class GetImage:
 
     def __init__(self, key):
@@ -28,9 +30,10 @@ class GetImage:
             conn = http.client.HTTPSConnection('api.cognitive.microsoft.com')
             conn.request("GET", "/bing/v5.0/images/search?%s" % params, "{body}", headers)
             response = conn.getresponse()
-            data = response.read()
-            print(data)
+            data = json.loads(response.read().decode('utf-8'))
             conn.close()
+
+            return data['value'][0]['contentUrl']
         except Exception as e:
             print("[Errno {0}] {1}".format(e.errno, e.strerror))
 
