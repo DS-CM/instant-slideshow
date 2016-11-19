@@ -12,7 +12,7 @@ def parseKeys(apikeysFile):
     try:
         with open(apikeysFile) as keysFile:
             for line in keysFile:
-                (service, key) = line.split(" ")
+                (service, key) = line.split(" : ")
                 keys[service] = key.strip("\n")
     except IOError as err:
         print("ERROR:\t Cannot open:\t ", apikeysFile, "\n\t Because:\t ", err)
