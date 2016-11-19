@@ -10,3 +10,8 @@ Make an app or website that makes a slideshow for you as you talk. Approach:
 - Have a **meme** percentage to give your slides more pizazz! 
 
 **Idea submitted by Arnab Nandi([site](http://arnab.org))**
+
+# Install Instructions
+Install all of the following:
+
+- [Uberi/speech_recognition](https://github.com/Uberi/speech_recognition) 
