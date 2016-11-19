@@ -1,5 +1,9 @@
 import sys
 from GetImage import GetImage
+from flask import Flask
+
+url = ""
+app = Flask(__name__)
 
 """
     Format is:
@@ -20,17 +24,23 @@ def parseKeys(apikeysFile):
     
     return keys
 
+@app.route("/")
+def image():
+    return '<img src="{}">'.format(url)
 
 """
     Start everything off.
 """
 def main():
+    global url
+    
     try :
         script, apikeysFile = sys.argv
 
         keys = parseKeys(apikeysFile)
         bing = GetImage(keys["microsoftapi"])
         url = bing.getImage(["code", "programming"])
+        app.run()
     except ValueError as err:
         print("ERROR:\t Run LiveSlides as the follows:\t python LiveSlides.py <apikeys file> ")
 
