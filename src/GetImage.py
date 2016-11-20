@@ -34,7 +34,11 @@ class GetImage:
             data = json.loads(response.read().decode('utf-8'))
             conn.close()
 
-            return data['value'][0]['contentUrl']
+            try:
+                return data['value'][0]['contentUrl']
+            except IndexError as e:
+                print("David wants to output this error: {}".format(e))
+                return None
         except Exception as e:
             print("[Errno {0}] {1}".format(e.errno, e.strerror))
 
