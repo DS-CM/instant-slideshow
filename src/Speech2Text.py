@@ -31,7 +31,7 @@ class Speech2Text:
 
         words = str(phrase).split()
         if words[0] == 'None':
-            words = ['white']
+            words = None
 
         print("Words in phrase: " + str(words))
 
