@@ -1,9 +1,12 @@
-import sys
+import sys, threading, time
+from threading import Thread
 from GetImage import GetImage
+from Speech2Text import Speech2Text
 from flask import Flask
 
 url = ""
 app = Flask(__name__)
+keys = []
 
 """
     Format is:
@@ -24,6 +27,16 @@ def parseKeys(apikeysFile):
     
     return keys
 
+def getKeywords():
+    global url
+    global keys
+
+    bing = GetImage(keys["microsoftapi"])
+    listener = Speech2Text()
+    url = bing.getImage(listener.listen())
+    time.sleep(5)
+    getKeywords()
+
 @app.route("/imagelink")
 def image():
     return url
@@ -33,13 +46,15 @@ def image():
 """
 def main():
     global url
+    global keys
     
     try :
         script, apikeysFile = sys.argv
-
         keys = parseKeys(apikeysFile)
-        bing = GetImage(keys["microsoftapi"])
-        url = bing.getImage(["code", "programming"])
+        t1 = Thread(None,getKeywords)
+        t1.daemon = True
+        t1.start()
+        # threading.Thread(None,getKeywords).start()
         app.run()
     except ValueError as err:
         print("ERROR:\t Run LiveSlides as the follows:\t python LiveSlides.py <apikeys file> ")

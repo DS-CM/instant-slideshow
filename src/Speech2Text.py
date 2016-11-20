@@ -20,14 +20,20 @@ class Speech2Text:
         # obtain audio from the microphone
         with sr.Microphone() as source:
             print("Say something!")
-            # audio = r.record(source, duration=2)
-            self.r.phrase_threshold = 2
-            audio = self.r.listen(source, timeout = 2)
+            audio = self.r.record(source, duration=5)
+            #self.r.phrase_threshold = 2
+            #audio = self.r.listen(source, timeout = 2)
         
         if TIME: start = datetime.now()
-        # self.__localSpeech2Text(audio)
-        self.__googleSpeech2Text(audio)
+        # phrase = self.__localSpeech2Text(audio)
+        phrase = self.__googleSpeech2Text(audio)
         if TIME: end = datetime.now(); print("Time taken: {}".format(end-start))
+
+        words = str(phrase).split()
+
+        print("Words in phrase: " + str(words))
+
+        return words
     
     def __localSpeech2Text(self, audio):
         # recognize speech using Sphinx
@@ -38,13 +44,17 @@ class Speech2Text:
         except sr.RequestError as e:
             print("Sphinx error; {0}".format(e))
 
+        return phrase
+
     def __googleSpeech2Text(self, audio):
         # recognize speech using Google Speech Recognition
         try:
             # for testing purposes, we're just using the default API key
             # to use another API key, use `r.recognize_google(audio, key="GOOGLE_SPEECH_RECOGNITION_API_KEY")`
             # instead of `r.recognize_google(audio)`
-            print("Google Speech Recognition thinks you said: " + self.r.recognize_google(audio))
+            phrase = self.r.recognize_google(audio)
+            print("Google Speech Recognition thinks you said: " + phrase)
+            return phrase
         except sr.UnknownValueError:
             print("Google Speech Recognition could not understand audio")
         except sr.RequestError as e:
