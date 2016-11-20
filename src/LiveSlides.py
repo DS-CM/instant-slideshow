@@ -1,12 +1,12 @@
-import sys, threading, time
+import sys, time
 from threading import Thread
 from GetImage import GetImage
 from Speech2Text import Speech2Text
-from flask import Flask
+from bottle import Bottle, run, static_file
 
 url = ""
-app = Flask(__name__)
-keys = []
+app = Bottle()
+keys = {}
 
 """
     Format is:
@@ -14,6 +14,7 @@ keys = []
     MicrosoftAPI 12345676
 """
 def parseKeys(apikeysFile):
+    global keys
     keys = {}
 
     try:
@@ -24,8 +25,6 @@ def parseKeys(apikeysFile):
     except IOError as err:
         print("ERROR:\t Cannot open:\t ", apikeysFile, "\n\t Because:\t ", err)
         sys.exit(1)
-    
-    return keys
 
 def getKeywords():
     global url
@@ -36,6 +35,11 @@ def getKeywords():
     url = bing.getImage(listener.listen())
     time.sleep(5)
     getKeywords()
+
+@app.route("/")
+@app.route("/<filepath:path>")
+def index(filepath="index.html"):
+    return static_file(filepath, root="")
 
 @app.route("/imagelink")
 def image():
@@ -51,7 +55,7 @@ def main():
     try :
         script, apikeysFile = sys.argv
         keys = parseKeys(apikeysFile)
-        t1 = Thread(None,getKeywords)
+        t1 = Thread(None, getKeywords)
         t1.daemon = True
         t1.start()
         # threading.Thread(None,getKeywords).start()
