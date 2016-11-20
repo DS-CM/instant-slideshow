@@ -37,9 +37,9 @@ def getKeywords():
     time.sleep(5)
     getKeywords()
 
-@app.route("/")
+@app.route("/imagelink")
 def image():
-    return '<img src="{}">'.format(url)
+    return url
 
 """
     Start everything off.
