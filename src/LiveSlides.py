@@ -70,7 +70,9 @@ class LiveSlides:
 
             words = self.listener.listen()
             if words != None:
-                url = self.bing.getImage(topicMeme + words)
+                newUrl = self.bing.getImage(topicMeme + words)
+                if newUrl != None:
+                    url = newUrl
 
 
 """
