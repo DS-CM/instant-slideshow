@@ -6,7 +6,7 @@ from bottle import Bottle, run, static_file
 
 url = ""
 app = Bottle()
-keys = {}
+keys = []
 
 """
     Format is:
@@ -14,9 +14,7 @@ keys = {}
     MicrosoftAPI 12345676
 """
 def parseKeys(apikeysFile):
-    global keys
     keys = {}
-
     try:
         with open(apikeysFile) as keysFile:
             for line in keysFile:
@@ -25,6 +23,7 @@ def parseKeys(apikeysFile):
     except IOError as err:
         print("ERROR:\t Cannot open:\t ", apikeysFile, "\n\t Because:\t ", err)
         sys.exit(1)
+    return keys
 
 def getKeywords():
     global url
@@ -43,6 +42,7 @@ def index(filepath="index.html"):
 
 @app.route("/imagelink")
 def image():
+    print(url)
     return url
 
 """
@@ -58,8 +58,7 @@ def main():
         t1 = Thread(None, getKeywords)
         t1.daemon = True
         t1.start()
-        # threading.Thread(None,getKeywords).start()
-        app.run()
+        run(app, host="localhost", port=8080)
     except ValueError as err:
         print("ERROR:\t Run LiveSlides as the follows:\t python LiveSlides.py <apikeys file> ")
 

@@ -1,13 +1,16 @@
-$(function() {
+(function updateImage() {
     $.ajax({
-        url: "http://127.0.0.1:5000/imagelink/",
+        url: "http://localhost:8080/imagelink",
         type: "GET",
-        dataType: 'text'
-    })
-    .done(function(data) {
-        $('#slide').attr("src", data);
-    })
-    .fail(function() {
-        alert("error");
+        dataType: 'text',
+        success: function(data) {
+            $('#slide').attr("src", data);
+        },
+        // fail: function() {
+        //     alert("error");
+        // },
+        complete: function() {
+            setTimeout(updateImage, 2000);
+        }
     });
-});
+})();
