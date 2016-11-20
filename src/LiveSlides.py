@@ -32,7 +32,7 @@ def getKeywords():
     bing = GetImage(keys["microsoftapi"])
     listener = Speech2Text()
     url = bing.getImage(listener.listen())
-    time.sleep(5)
+    #time.sleep(2)
     getKeywords()
 
 @app.route("/")
