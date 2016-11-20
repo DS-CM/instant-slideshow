@@ -30,6 +30,8 @@ class Speech2Text:
         if TIME: end = datetime.now(); print("Time taken: {}".format(end-start))
 
         words = str(phrase).split()
+        if words[0] == 'None':
+            words = ['white']
 
         print("Words in phrase: " + str(words))
 

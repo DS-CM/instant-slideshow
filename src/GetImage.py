@@ -9,6 +9,7 @@ class GetImage:
     def getImage(self, keywords):
 
         search_string = ""
+
         for x in keywords:
             search_string = search_string + " " + x
 
