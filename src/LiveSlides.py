@@ -2,11 +2,13 @@ import sys, time
 from threading import Thread
 from GetImage import GetImage
 from Speech2Text import Speech2Text
-from bottle import Bottle, run, static_file
+from bottle import Bottle, run, static_file, request
 
-url = ""
+url = "images/this-is-not-fine.png"
 app = Bottle()
 keys = []
+topic = ""
+memelevel = 0
 
 """
     Format is:
@@ -45,12 +47,19 @@ def image():
     print(url)
     return url
 
+@app.route('/settings', method='POST')
+def settings():
+    global topic, memelevel
+    topic = request.forms.get('Topic')
+    memelevel = request.forms.get('MemeLevel')
+    print("\n>> GOT: \ttopic: {}\n\t\tmemelevel: {}\n".format(topic, memelevel))
+    return "<p>Settings Updated</p>"
+
 """
     Start everything off.
 """
 def main():
-    global url
-    global keys
+    global url, keys
     
     try :
         script, apikeysFile = sys.argv
