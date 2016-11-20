@@ -16,3 +16,4 @@ Install all of the following:
 
 - [Uberi/speech_recognition](https://github.com/Uberi/speech_recognition)
 - [Bottle](http://bottlepy.org/docs/dev/tutorial.html#quickstart-hello-world)
+- [Reveal.js](https://github.com/hakimel/reveal.js)
