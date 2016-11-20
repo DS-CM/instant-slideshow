@@ -1,4 +1,4 @@
-import sys, time
+import sys, time, random
 from threading import Thread
 from GetImage import GetImage
 from Speech2Text import Speech2Text
@@ -28,12 +28,17 @@ def parseKeys(apikeysFile):
     return keys
 
 def getKeywords():
-    global url
-    global keys
+    global url, keys, topic, memelevel
+
+    random.seed(None, 2)
+    num = random.randint(0,99)
+    other_keywords = [topic]
+    if num < memelevel:
+        other_keywords = other_keywords + ["meme"]
 
     bing = GetImage(keys["microsoftapi"])
     listener = Speech2Text()
-    url = bing.getImage(listener.listen())
+    url = bing.getImage(other_keywords + listener.listen())
     #time.sleep(2)
     getKeywords()
 
@@ -51,7 +56,7 @@ def image():
 def settings():
     global topic, memelevel
     topic = request.forms.get('Topic')
-    memelevel = request.forms.get('MemeLevel')
+    memelevel = int(request.forms.get('MemeLevel'))
     print("\n>> GOT: \ttopic: {}\n\t\tmemelevel: {}\n".format(topic, memelevel))
     return "<p>Settings Updated</p>"
 
