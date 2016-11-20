@@ -38,8 +38,9 @@ def getKeywords():
 
     bing = GetImage(keys["microsoftapi"])
     listener = Speech2Text()
-    url = bing.getImage(other_keywords + listener.listen())
-    #time.sleep(2)
+    words = listener.listen()
+    if words != None:
+        url = bing.getImage(other_keywords + words)
     getKeywords()
 
 @app.route("/")
