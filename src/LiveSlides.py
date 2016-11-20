@@ -6,7 +6,6 @@ from bottle import Bottle, run, static_file, request
 
 url = "images/this-is-not-fine.png"
 app = Bottle()
-keys = []
 topic = ""
 memelevel = 0
 
@@ -27,22 +26,6 @@ def parseKeys(apikeysFile):
         sys.exit(1)
     return keys
 
-def getKeywords():
-    global url, keys, topic, memelevel
-
-    random.seed(None, 2)
-    num = random.randint(0,99)
-    other_keywords = [topic]
-    if num < memelevel:
-        other_keywords = other_keywords + ["meme"]
-
-    bing = GetImage(keys["microsoftapi"])
-    listener = Speech2Text()
-    words = listener.listen()
-    if words != None:
-        url = bing.getImage(other_keywords + words)
-    getKeywords()
-
 @app.route("/")
 @app.route("/<filepath:path>")
 def index(filepath="index.html"):
@@ -61,18 +44,47 @@ def settings():
     print("\n>> GOT: \ttopic: {}\n\t\tmemelevel: {}\n".format(topic, memelevel))
     return "<p>Settings Updated</p>"
 
+
+class LiveSlides:
+    def __init__(self, microsoftkey):
+        random.seed(None, 2)
+        self.bing = GetImage(microsoftkey)
+        self.listener = Speech2Text()
+
+    def run(self):
+        t1 = Thread(None, self.__updateURL)
+        t1.daemon = True
+        t1.start()
+
+    def __updateURL(self):
+        global url, topic, memelevel
+        
+        while True:
+            topicMeme = []
+
+            num = random.randint(0,99)
+            if num < memelevel:
+                topicMeme = [ topic, "meme" ]
+            else:
+                topicMeme = [ topic ]
+
+            words = self.listener.listen()
+            if words != None:
+                url = self.bing.getImage(topicMeme + words)
+
+
 """
     Start everything off.
 """
 def main():
-    global url, keys
+    global url
     
     try :
         script, apikeysFile = sys.argv
+
         keys = parseKeys(apikeysFile)
-        t1 = Thread(None, getKeywords)
-        t1.daemon = True
-        t1.start()
+        liveSlide = LiveSlides(keys["microsoftapi"])
+        liveSlide.run()
         run(app, host="localhost", port=8080)
     except ValueError as err:
         print("ERROR:\t Run LiveSlides as the follows:\t python LiveSlides.py <apikeys file> ")
