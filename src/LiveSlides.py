@@ -1,9 +1,12 @@
-import sys
+import sys, time
+from threading import Thread
 from GetImage import GetImage
+from Speech2Text import Speech2Text
 from bottle import Bottle, run, static_file
 
 url = ""
 app = Bottle()
+keys = {}
 
 """
     Format is:
@@ -11,6 +14,7 @@ app = Bottle()
     MicrosoftAPI 12345676
 """
 def parseKeys(apikeysFile):
+    global keys
     keys = {}
 
     try:
@@ -21,15 +25,23 @@ def parseKeys(apikeysFile):
     except IOError as err:
         print("ERROR:\t Cannot open:\t ", apikeysFile, "\n\t Because:\t ", err)
         sys.exit(1)
-    
-    return keys
+
+def getKeywords():
+    global url
+    global keys
+
+    bing = GetImage(keys["microsoftapi"])
+    listener = Speech2Text()
+    url = bing.getImage(listener.listen())
+    time.sleep(5)
+    getKeywords()
 
 @app.route("/")
 @app.route("/<filepath:path>")
 def index(filepath="index.html"):
     return static_file(filepath, root="")
 
-@app.route("/imagelink/")
+@app.route("/imagelink")
 def image():
     return url
 
@@ -38,14 +50,16 @@ def image():
 """
 def main():
     global url
+    global keys
     
     try :
         script, apikeysFile = sys.argv
-
         keys = parseKeys(apikeysFile)
-        bing = GetImage(keys["microsoftapi"])
-        url = bing.getImage(["code", "programming"])
-        run(app, host="localhost", port=8080)
+        t1 = Thread(None, getKeywords)
+        t1.daemon = True
+        t1.start()
+        # threading.Thread(None,getKeywords).start()
+        app.run()
     except ValueError as err:
         print("ERROR:\t Run LiveSlides as the follows:\t python LiveSlides.py <apikeys file> ")
 
