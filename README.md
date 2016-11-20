@@ -14,4 +14,5 @@ Make an app or website that makes a slideshow for you as you talk. Approach:
 # Install Instructions
 Install all of the following:
 
-- [Uberi/speech_recognition](https://github.com/Uberi/speech_recognition) 
+- [Uberi/speech_recognition](https://github.com/Uberi/speech_recognition)
+- [Bottle](http://bottlepy.org/docs/dev/tutorial.html#quickstart-hello-world)
