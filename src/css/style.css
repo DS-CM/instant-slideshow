@@ -1,0 +1,14 @@
+.Aligner {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.image-box {
+    width: 500px;
+    height: 500px;
+}
+
+image {
+    min-width: 100%;
+}

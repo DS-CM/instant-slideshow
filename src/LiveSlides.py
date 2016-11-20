@@ -1,9 +1,9 @@
 import sys
 from GetImage import GetImage
-from flask import Flask
+from bottle import Bottle, run, static_file
 
 url = ""
-app = Flask(__name__)
+app = Bottle()
 
 """
     Format is:
@@ -24,7 +24,12 @@ def parseKeys(apikeysFile):
     
     return keys
 
-@app.route("/imagelink")
+@app.route("/")
+@app.route("/<filepath:path>")
+def index(filepath="index.html"):
+    return static_file(filepath, root="")
+
+@app.route("/imagelink/")
 def image():
     return url
 
@@ -40,7 +45,7 @@ def main():
         keys = parseKeys(apikeysFile)
         bing = GetImage(keys["microsoftapi"])
         url = bing.getImage(["code", "programming"])
-        app.run()
+        run(app, host="localhost", port=8080)
     except ValueError as err:
         print("ERROR:\t Run LiveSlides as the follows:\t python LiveSlides.py <apikeys file> ")
 
