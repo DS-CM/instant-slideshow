@@ -1,4 +1,4 @@
-import sys, time, random
+import sys, time, random, os
 from threading import Thread
 from GetImage import GetImage
 from Speech2Text import Speech2Text
@@ -8,23 +8,6 @@ url = "images/this-is-not-fine.png"
 app = Bottle()
 topic = ""
 memelevel = 0
-
-"""
-    Format is:
-
-    MicrosoftAPI 12345676
-"""
-def parseKeys(apikeysFile):
-    keys = {}
-    try:
-        with open(apikeysFile) as keysFile:
-            for line in keysFile:
-                (service, key) = line.split(" : ")
-                keys[service] = key.strip("\n")
-    except IOError as err:
-        print("ERROR:\t Cannot open:\t ", apikeysFile, "\n\t Because:\t ", err)
-        sys.exit(1)
-    return keys
 
 @app.route("/")
 @app.route("/<filepath:path>")
@@ -82,14 +65,11 @@ def main():
     global url
     
     try :
-        script, apikeysFile = sys.argv
-
-        keys = parseKeys(apikeysFile)
-        liveSlide = LiveSlides(keys["microsoftapi"])
+        liveSlide = LiveSlides(os.environ["microsoftapi"])
         liveSlide.run()
         run(app, host="localhost", port=8080)
     except ValueError as err:
-        print("ERROR:\t Run LiveSlides as the follows:\t python LiveSlides.py <apikeys file> ")
+        print("ERROR:\t Run LiveSlides with the following:\n  Environmental microsoftapi key and\n  Run with:\t python LiveSlides.py")
 
 if __name__ == "__main__":
     main()
